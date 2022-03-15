@@ -10,22 +10,14 @@ export default class Animate {
     this.lastKey, (this.scrolOffset = 0);
     this.obj = init(image, c);
     this.lastKey;
-    this.keys = {
-      right: {
-        pressed: false,
-      },
-      left: {
-        pressed: false,
-      },
-    };
+    
     // this.keydown = keydown;
     // this.keyup = keyup;
   }
 
   animate() {
     requestAnimationFrame(animate.animate);
-    c.fillStyle = "white";
-    c.fillRect(0, 0, 66, 66);
+    
 
     var player = animate.obj[0];
     var platfom = animate.obj[1];
@@ -33,72 +25,11 @@ export default class Animate {
     // var b = animate.keydown();
     // console.log(b)
 
-    genericObjects.forEach((genericObject) => {
-      genericObject.draw();
-    });
+    
 
-    platfom.forEach((platform) => {
-      platform.draw();
-    });
-    player.update();
+    
 
-    //platfom collision detection
-    platfom.forEach((platform) => {
-      if (
-        player.position.y + player.height <= platform.position.y &&
-        player.position.y + player.height + player.velocity.y >=
-          platform.position.y &&
-        player.position.x + player.width >= platform.position.x &&
-        player.position.x <= platform.position.x + platform.width
-      ) {
-        player.velocity.y = 0;
-        // console.log(player.velocity.y)
-      }
-    });
-
-    document.addEventListener("keydown", ({ key }) => {
-      switch (key) {
-        case "a":
-        case "ArrowLeft":
-          animate.keys.left.pressed = true;
-          animate.lastKey = "left";
-
-          break;
-        case "d":
-        case "ArrowRight":
-          animate.keys.right.pressed = true;
-          animate.lastKey = "right";
-          break;
-        case "w":
-        case "ArrowUp":
-          player.velocity.y -= 0.11;
-          break;
-        default:
-          break;
-      }
-    });
-
-    addEventListener("keyup", ({ key }) => {
-      switch (key) {
-        case "a":
-        case "ArrowLeft":
-          animate.keys.left.pressed = false;
-          break;
-        case "d":
-        case "ArrowRight":
-          animate.keys.right.pressed = false;
-        
-          break;
-        case "w":
-        case "ArrowUp":
-          console.log(player.velocity.y)
-
-          animate.obj[0].velocity.y += 0.11;
-          break;
-        default:
-          break;
-      }
-    });
+    
 
     // keyup();
     // move player and platforms
