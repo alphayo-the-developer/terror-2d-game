@@ -1,7 +1,8 @@
 export const platfomCollision = function (platfom,player) {
     //platfom collision detection
     platfom.forEach((platform) => {
-        if (
+
+      if (
           player.position.y + player.height <= platform.position.y &&
           player.position.y + player.height + player.velocity.y >=
             platform.position.y &&
@@ -9,7 +10,7 @@ export const platfomCollision = function (platfom,player) {
           player.position.x <= platform.position.x + platform.width
         ) {
           player.velocity.y = 0;
-          // console.log(player.velocity.y)
+          console.log(player.velocity.y)
         }
       });
 }

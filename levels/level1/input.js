@@ -8,6 +8,9 @@ export default class InputHandler {
             left: {
               pressed: false,
             },
+            bat: {
+              pressed: false,
+            },
           };
 
         window.addEventListener("keydown", ({ key }) => {
@@ -24,7 +27,10 @@ export default class InputHandler {
                 break;
               case "w":
               case "ArrowUp":
-                // player.velocity.y -= 0.11;
+              this.keys.bat.pressed = true;
+              this.lastKey = "bat";
+
+              // player.velocity.y -= 0.11;
                 break;
               default:
                 break;
