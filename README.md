@@ -5,7 +5,7 @@ by __alphayo ken__
 
 __(work in progress)__
 
-A 2D scroller game with shooting and platforming mechanics
+A 2D scroller game with shooting and platforming mechanics.Made with __vanilla javascript.__
 
 ## __Installation__
 
