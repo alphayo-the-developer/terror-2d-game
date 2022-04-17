@@ -37,7 +37,7 @@ especially state management design pattern.
 
 I also learned alot about __HTML Canvas Api.__
 
-How to implement modules in javascript.
+How to implement __modules__ in javascript.
 
-Alot about OOP in javascript
+Alot about __OOP__ in javascript
 
