@@ -31,6 +31,7 @@ const belly_sliding_start = this.document.querySelector('#belly_sliding_start');
 const belly_sliding_and_shot = this.document.querySelector('#belly_sliding_and_shot');
 const bullet_impact = this.document.querySelector('#bullet_impact');
 const run = this.document.querySelector('#run');
+const run_shot = this.document.querySelector('#run_shot');
 const run_shot_up = this.document.querySelector('#run_shot_up');
 const run_shot_down = this.document.querySelector('#run_shot_down');
 const run_reload = this.document.querySelector('#run_reload');
@@ -44,7 +45,11 @@ const jump_fall = this.document.querySelector('#jump_fall');
 const jump_bat = this.document.querySelector('#jump_bat');
 const jump_bat_fall = this.document.querySelector('#jump_bat_fall');
 const jump_bat_attack = this.document.querySelector('#jump_bat_attack');
-
+const shoot = this.document.querySelector('#shot');
+const shootup = this.document.querySelector('#shot_diagonal_up');
+const shootdown = this.document.querySelector('#shot_diagonal_down');
+const shootvertical = this.document.querySelector('#shot_up');
+const standup = this.document.querySelector('#stand_up');
 const canvas = document.querySelector("canvas");
 
 const ctx = canvas.getContext("2d");
@@ -65,6 +70,7 @@ const image = {
   hurt_bat,
   death,
   death_bat,
+  standup,
   crouch_start,
   crouch_shot,
   crouch_reload,
@@ -89,7 +95,14 @@ const image = {
   jump_fall,
   jump_bat,
   jump_bat_fall,
-  jump_bat_attack
+  jump_bat_attack,
+  shoot,
+  shootup,
+  shootdown,
+  shootvertical,
+  run_shot,
+  run_shot_up,
+  run_shot_down
 };
 
 
@@ -131,10 +144,9 @@ let lastTime = 0;
     platforms.forEach((platform) => {
       platform.draw(ctx);
     });
-    
     player.update(ctx, input.lastKey, input.keys, deltaTime);
 
-    platfomCollision(platforms,player);
+    // platfomCollision(platforms,player);
 
 
     requestAnimationFrame(animate);

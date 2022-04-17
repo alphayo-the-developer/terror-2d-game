@@ -1,4 +1,4 @@
-import { Idle ,IdleBat } from "./playerState.js";
+import { Idle ,IdleBat, Crouch } from "./playerState.js";
 
 var gravity = 0.8;
 
@@ -8,7 +8,7 @@ export default class Player {
       this.idle = image.idle;
       this.run = image.run;
       this.speed = 10;
-      this.states = [ new Idle(this, platforms, genericObjects), new IdleBat(this, platforms, genericObjects)];
+      this.states = [ new Idle(this, platforms, genericObjects), new IdleBat(this, platforms, genericObjects), new Crouch(this, platforms, genericObjects)];
       this.currentState = this.states[0];
       this.position = {
         x: 100,
@@ -25,7 +25,7 @@ export default class Player {
         stand: {
           right: image.idle,
           // left: image.spriteStandLeft,
-          cropWidth: 177,
+          
           width: 394,
           height:409
         },
@@ -35,18 +35,126 @@ export default class Player {
           width: 415,
           height:442
         },
+        reload: {
+          right: image.reload,
+          vertical: true,
+          width: 403,
+          height:426
+        },
+        runreload: {
+          right: image.run_reload,
+          vertical: true,
+          width: 425,
+          height:468
+        },
         standbat: {
           right: image.idle_bat,
-          cropWidth: 394,
-          width: 415,
-          height:442
+          vertical: true,
+          width: 297,
+          height:467
+        },
+        runbat: {
+          right: image.run_bat,
+          vertical: true,
+          width: 346,
+          height: 488
+        },
+        idlebatattack: {
+          right: image.idle_bat_attack,
+          vertical: true,
+          width: 779,
+          height: 565
+        },
+        runbatattack: {
+          right: image.run_bat_attack,
+          vertical: true,
+          width: 739,
+          height: 627
+        },
+        crouchstart: {
+          right: image.crouch_start,
+          vertical: true,
+          width: 569,
+          height: 436
+        },
+        standcrouch: {
+          right: image.standup,
+          vertical: true,
+          width: 569,
+          height: 436
+        },
+        crouchidle: {
+          right: image.crouch_idle,
+          vertical: true,
+          width: 569,
+          height: 263
+        }
+        ,
+        crouchreload: {
+          right: image.crouch_reload,
+          vertical: true,
+          width: 569,
+          height: 305
+        }
+        ,
+        idleshoot: {
+          right: image.shoot,
+          vertical: true,
+          width: 597,
+          height: 407
+        },
+        idleshootup: {
+          right: image.shootup,
+          vertical: true,
+          width: 533,
+          height: 566
+        },
+        idleshootdown: {
+          right: image.shootdown,
+          vertical: true,
+          width: 536,
+          height: 397
+        },
+        idleshootvertical: {
+          right: image.shootvertical,
+          vertical: true,
+          width: 256,
+          height: 780
+        }
+        ,
+        runshoot: {
+          right: image.run_shot,
+          vertical: true,
+          width: 615,
+          height: 442
+        },
+        runshootup: {
+          right: image.run_shot_up,
+          vertical: true,
+          width: 550,
+          height: 568
+        },
+        runshootdown: {
+          right: image.run_shot_down,
+          vertical: true,
+          width: 552,
+          height: 428
+        },
+        jump: {
+          right: image.jump,
+          vertical: true,
+          width: 404,
+          height: 673
         }
       };
 
       this.currentSprite = this.sprites.stand.right;
+      // this.currentSprite = this.sprites.runbat.right;
+      // this.currentSpriteState = this.sprites.runbat;
       this.currentSpriteState = this.sprites.stand
       this.currentCropWidth = 177;
       this.maxFrame = 6;
+      this.framey = 0;
       this.x = 0;
       this.y = 0;
       this.fps = 60;
@@ -54,6 +162,9 @@ export default class Player {
       this.frameInterval = 1000/this.fps;
       this.gameFrame = 0;
       this.staggerFrame = 5;
+      this.gravity = 5;
+      this.shouldJump = false;
+      this.jumpCounter = 0;
     }
 
     draw(c, deltaTime) {
@@ -77,32 +188,73 @@ export default class Player {
       }
 
       let position = Math.floor(this.gameFrame/this.staggerFrame) % 6;
+
       this.frames = this.currentSpriteState.width * position;
-      c.drawImage(this.currentSprite, this.frames,this.currentSpriteState.height,this.currentSpriteState.width,this.currentSpriteState.height,this.position.x,this.position.y,this.currentSpriteState.width/3,this.currentSpriteState.height/3);
+      // this.framey = this.currentSpriteState.height * position
+      console.log(this.position.y)
+      c.drawImage(this.currentSprite, this.frames,this.currentSpriteState.height * this.framey ,this.currentSpriteState.width,this.currentSpriteState.height,this.position.x,this.position.y,this.currentSpriteState.width/3,this.currentSpriteState.height/3);
       this.gameFrame++;
     }
 
     update(c, input, keys, deltaTime) {
-      this.frames++;
-      if (this.frames > 59 && (this.currentSprite === this.sprites.stand.right) || this.currentSprite === this.sprites.stand.left) {
-        this.frames = 0;
-      }else if(this.frames > 29 && (this.currentSprite === this.sprites.run.right) || this.currentSprite === this.sprites.run.left) {
-        // this.frames = 0;
+      let position = Math.floor(this.gameFrame/this.staggerFrame) % 3;
+
+      if(this.currentSpriteState.vertical){
+        if(this.frameTimer > this.frameInterval){
+          if(position == 2){
+            this.framey++
+          }
+          if(this.framey > 2){
+            this.framey = 0;
+          }
+          this.frameTimer = 0;
+        }else {
+          this.frameTimer += deltaTime;
+        }
+        
+        this.frames++;
+        if (this.frames > 59 && (this.currentSprite === this.sprites.stand.right) || this.currentSprite === this.sprites.stand.left) {
+          this.frames = 0;
+        }else if(this.frames > 29 && (this.currentSprite === this.sprites.run.right) || this.currentSprite === this.sprites.run.left) {
+          // this.frames = 0;
+        }
       }
+      
       this.currentState.handleInput(input, keys);
 
       this.draw(c,deltaTime);
 
-      this.position.y += this.velocity.y;
+      // this.position.y += this.velocity.y;
       this.position.x += this.velocity.x;
+      // console.log(this.position.y)
+      // console.log(this.jumpCounter)
+      if(this.shouldJump){
+        this.jumpCounter++;
+        if(this.jumpCounter < 25){
+          //go up
+          this.position.y -= this.gravity;
+        }else if(this.jumpCounter > 25 && this.jumpCounter < 30){
+          this.position.y +=0;
+        }else if(this.jumpCounter < 61){
+          //come down
+          this.position.y += this.gravity;
+        }
 
-
-      if (this.position.y + this.height + this.velocity.y <= 570) {
-        this.velocity.y += gravity;
-
-        // } else {
-        //   this.velocity.y = 0;
+        //end cycle
+        if(this.jumpCounter >= 60){
+          this.shouldJump = false;
+          this.position.y = 330;
+        }
       }
+
+      // if (this.position.y  <= 57) {
+      //   this.velocity.y = this.velocity.y + this.gravity;
+
+      //   // } else {
+      //   //   this.velocity.y = 0;
+      // }else {
+      //   this.velocity.y = 0
+      // }
     }
 
     setState(state, keys){
